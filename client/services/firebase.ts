@@ -1,8 +1,6 @@
-import { initializeApp, FirebaseApp } from "firebase/app";
-import { getFirestore, Firestore } from "firebase/firestore";
-// 1. Import everything from the main 'firebase/auth'
-// @ts-ignore
-import { initializeAuth, getReactNativePersistence, Auth } from "firebase/auth";
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from "firebase/firestore";
+import { initializeAuth, getReactNativePersistence, getAuth } from 'firebase/auth';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const firebaseConfig = {
@@ -14,14 +12,18 @@ const firebaseConfig = {
     appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID
 };
 
-const app: FirebaseApp = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-const auth: Auth = initializeAuth(app, {
-    persistence: getReactNativePersistence(AsyncStorage)
-});
+let auth;
+try {
+    auth = initializeAuth(app, {
+        persistence: getReactNativePersistence(AsyncStorage),
+    });
+} catch (e) {
 
-const db: Firestore = getFirestore(app);
+    auth = getAuth(app);
+}
+
+const db = getFirestore(app);
 
 export { auth, db };
-
-console.log("", process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET ? "Yes" : "No");
