@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { saveWorkout } from '@/services/workoutService';
+import { getRecentWorkouts, saveWorkout } from '@/services/workoutService';
 import { AchievementModal } from '@/components/AchievementModal';
+import { auth } from '@/services/firebase';
 
 export default function AddWorkout() {
     const [type, setType] = useState('');
@@ -16,30 +17,57 @@ export default function AddWorkout() {
         if (!type || !duration) return Alert.alert("Error", "Please fill in at least the type and duration.");
 
         setIsSaving(true);
-        const result = await saveWorkout({
-            type,
-            duration: Number(duration),
-            calories: Number(calories) || 0,
-            date: new Date().toISOString(),
-        });
-        setIsSaving(false);
 
-        if (result.success) {
-            if (Number(calories) >= 500) {
-                setAchievement({
-                    title: "CALORIE CRUSHER",
-                    desc: "You just burned over 500 calories in a single session! You're on fire today."
-                });
-                setShowModal(true);
+        try {
+            const result = await saveWorkout({
+                type,
+                duration: Number(duration),
+                calories: Number(calories) || 0,
+                date: new Date().toISOString(),
+                synced: !!auth.currentUser
+            });
+
+            if (result.success) {
+                let currentAchievement = null;
+
+                const history = await getRecentWorkouts();
+                if (history.length === 10) {
+                    currentAchievement = {
+                        title: "Milestone Reached!",
+                        desc: "10 Workouts completed. You're building a serious habit!"
+                    };
+                }
+                else if (Number(calories) >= 500) {
+                    currentAchievement = {
+                        title: "CALORIE CRUSHER",
+                        desc: "You just burned over 500 calories in a single session!"
+                    };
+                }
+
+                if (currentAchievement) {
+                    setAchievement(currentAchievement);
+                    setShowModal(true);
+                } else {
+                    Alert.alert("Success", result.synced ? "Saved!" : "Saved Locally");
+                }
+
+                setType('');
+                setDuration('');
+                setCalories('');
             } else {
-                Alert.alert("Success", "Workout logged!");
+                Alert.alert("Error", "Problem saving data!");
+                setType('');
+                setDuration('');
+                setCalories('');
             }
+
+        } catch (error) {
+            console.error("Save failed:", error);
+            Alert.alert("Error", "An unexpected error occurred.");
+        } finally {
+            setIsSaving(false);
         }
-        Alert.alert("Success", result.synced ? "Synced to Cloud! " : "Saved Locally");
-        setType('');
-        setDuration('');
-        setCalories('');
-    }
+    };
 
     return (
         <ScrollView className="flex-1 bg-surface-900 px-container pt-12 mt-15">
@@ -82,11 +110,9 @@ export default function AddWorkout() {
                     />
                 </View>
 
-                {/* Save Button */}
                 <TouchableOpacity
                     onPress={handleSave}
-                    disabled={isSaving}
-                    className={`p-5 rounded-button items-center mt-6 ${isSaving ? 'bg-surface-700' : 'bg-primary'}`}
+                    className={`p-5 rounded-button items-center mt-6 bg-primary`}
                 >
                     <Text className="text-secondary font-heading text-xl">
                         {isSaving ? "Saving..." : "Save Workout"}

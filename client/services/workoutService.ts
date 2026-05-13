@@ -9,6 +9,7 @@ export interface Workout {
     duration: number;
     calories: number;
     date: string;
+    synced?: boolean;
 }
 
 export const saveWorkout = async (workout: Omit<Workout, 'id'>) => {
@@ -21,8 +22,13 @@ export const saveWorkout = async (workout: Omit<Workout, 'id'>) => {
         await AsyncStorage.setItem("local_workouts", JSON.stringify(workouts));
 
         if (auth.currentUser) {
-            await addDoc(collection(db, "users", auth.currentUser.uid, "workouts"), newWorkout);
-            console.log("Synced to Firebase!");
+            addDoc(collection(db, "users", auth.currentUser.uid, "workouts"), {
+                ...newWorkout,
+                synced: true
+            })
+                .then(() => console.log("Cloud sync finished!"))
+                .catch((err) => console.log("Cloud sync failed (will retry next launch/sync):", err));
+
         }
 
         return { success: true, local: true, synced: !!auth.currentUser };
@@ -81,13 +87,24 @@ export const syncOfflineWorkouts = async () => {
         const localData = await AsyncStorage.getItem("local_workouts");
         if (!localData) return;
 
-        const workouts: Workout[] = JSON.parse(localData);
+        let workouts: Workout[] = JSON.parse(localData);
 
-        for (const workout of workouts) {
-            await addDoc(collection(db, "users", user.uid, "workouts"), workout);
+        const unsynced = workouts.filter(w => !w.synced);
+
+        if (unsynced.length === 0) return;
+
+        for (const workout of unsynced) {
+            await addDoc(collection(db, "users", user.uid, "workouts"), {
+                ...workout,
+                synced: true
+            });
+
+            workout.synced = true;
         }
 
-        Alert.alert("Sync Complete", "All local workouts are now in the cloud!");
+        await AsyncStorage.setItem("local_workouts", JSON.stringify(workouts));
+
+        Alert.alert("Sync Complete", "New workouts have been uploaded! ");
     } catch (error) {
         console.error("Sync failed:", error);
     }

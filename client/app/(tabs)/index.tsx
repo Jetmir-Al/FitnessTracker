@@ -20,12 +20,16 @@ export default function HomeScreen() {
   const totalCalories = workouts.reduce((sum, w) => sum + (w.calories || 0), 0);
   const totalMinutes = workouts.reduce((sum, w) => sum + (w.duration || 0), 0);
   const dailyMinutes = todayWorkouts.reduce((sum, w) => sum + (w.duration || 0), 0);
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
+  const weeklyWorkouts = workouts.filter(w => new Date(w.date) > oneWeekAgo);
+  const weeklyMinutes = weeklyWorkouts.reduce((sum, w) => sum + (w.duration || 0), 0);
   const avgDuration = workouts.length > 0 ? Math.round(totalMinutes / workouts.length) : 0;
 
   const weeklyGoal = 300;
   const dailyGoal = 60;
-  const weeklyProgress = Math.min((totalMinutes / weeklyGoal) * 100, 100);
+  const weeklyProgress = Math.min((weeklyMinutes / weeklyGoal) * 100, 100);
   const dailyProgress = Math.min((dailyMinutes / dailyGoal) * 100, 100);
 
 
@@ -46,7 +50,9 @@ export default function HomeScreen() {
   };
   useFocusEffect(
     useCallback(() => {
+
       fetchData();
+
     }, [])
   );
 

@@ -21,7 +21,7 @@ const Login = () => {
                 Alert.alert("Invalid Credecials");
             }
             if (user) {
-                Alert.alert("Welcome!", "Account created successfully.");
+                Alert.alert("Welcome!", "Loged in successfully.");
                 router.replace('/(tabs)');
             } else {
                 Alert.alert("Invalid Credecials");
@@ -58,7 +58,7 @@ const Login = () => {
                         onPress={handleLogin}
                         className="bg-primary p-4 rounded-button items-center mt-6"
                     >
-                        <Text className="text-secondary font-heading text-lg">Create Account</Text>
+                        <Text className="text-secondary font-heading text-lg">Submit</Text>
                     </TouchableOpacity>
                 </View>
                 <Link href={"/(auth)/sign-in"} className='mt-2 color-white gap-2 flex-row text-center justify-evenly w-[100%]'>

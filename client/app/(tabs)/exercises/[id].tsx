@@ -28,7 +28,7 @@ const ExerciseDetails = () => {
                 <Text className="text-surface-50 text-4xl font-heading mt-1">{id}</Text>
             </View>
 
-            <View className="flex-row space-x-4 mb-8">
+            <View className="flex-row space-x-4 mb-8 gap-3">
                 <View className="flex-1 bg-surface-800 p-4 rounded-card border border-gray-800">
                     <Text className="color-white text-xs font-body uppercase">Total Sessions</Text>
                     <Text className="text-surface-50 text-2xl font-mono">{history.length}</Text>
