@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { saveWorkout } from '@/services/workoutService';
+import { AchievementModal } from '@/components/AchievementModal';
 
 export default function AddWorkout() {
     const [type, setType] = useState('');
     const [duration, setDuration] = useState('');
     const [calories, setCalories] = useState('');
     const [isSaving, setIsSaving] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [achievement, setAchievement] = useState({ title: '', desc: '' });
 
     const handleSave = async () => {
         if (!type || !duration) return Alert.alert("Error", "Please fill in at least the type and duration.");
@@ -22,12 +25,21 @@ export default function AddWorkout() {
         setIsSaving(false);
 
         if (result.success) {
-            Alert.alert("Success", result.synced ? "Synced to Cloud! " : "Saved Locally");
-            setType('');
-            setDuration('');
-            setCalories('');
+            if (Number(calories) >= 500) {
+                setAchievement({
+                    title: "CALORIE CRUSHER",
+                    desc: "You just burned over 500 calories in a single session! You're on fire today."
+                });
+                setShowModal(true);
+            } else {
+                Alert.alert("Success", "Workout logged!");
+            }
         }
-    };
+        Alert.alert("Success", result.synced ? "Synced to Cloud! " : "Saved Locally");
+        setType('');
+        setDuration('');
+        setCalories('');
+    }
 
     return (
         <ScrollView className="flex-1 bg-surface-900 px-container pt-12 mt-15">
@@ -85,6 +97,13 @@ export default function AddWorkout() {
                     <Text className="text-surface-500 font-body">Clear Fields</Text>
                 </TouchableOpacity>
             </View>
+            <AchievementModal
+                visible={showModal}
+                title={achievement.title}
+                description={achievement.desc}
+                onClose={() => setShowModal(false)}
+            />
         </ScrollView>
     );
-}
+
+};

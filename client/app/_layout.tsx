@@ -4,11 +4,14 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '@/services/firebase';
 import { View, ActivityIndicator } from 'react-native'; import "@/global.css";
 
+
 export default function RootLayout() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   const segments = useSegments();
+
+
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
