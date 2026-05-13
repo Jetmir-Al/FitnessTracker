@@ -39,7 +39,7 @@ export const getRecentWorkouts = async () => {
         const q = query(
             collection(db, "users", user.uid, "workouts"),
             orderBy("date", "desc"),
-            limit(5)
+            limit(50)
         );
         const querySnapshot = await getDocs(q);
         return querySnapshot.docs.map(doc => ({
@@ -90,5 +90,25 @@ export const syncOfflineWorkouts = async () => {
         Alert.alert("Sync Complete", "All local workouts are now in the cloud!");
     } catch (error) {
         console.error("Sync failed:", error);
+    }
+};
+
+export const getAllWorkouts = async () => {
+    const user = auth.currentUser;
+    if (!user) return [];
+
+    try {
+        const q = query(
+            collection(db, "users", user.uid, "workouts"),
+            orderBy("date", "desc")
+        );
+        const querySnapshot = await getDocs(q);
+        return querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        })) as Workout[];
+    } catch (error) {
+        console.error("Error fetching all workouts:", error);
+        return [];
     }
 };

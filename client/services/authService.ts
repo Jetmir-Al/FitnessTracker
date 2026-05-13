@@ -1,7 +1,8 @@
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signOut as firebaseSignOut
+    signOut as firebaseSignOut,
+    deleteUser
 } from "firebase/auth";
 import { auth } from "./firebase";
 
@@ -25,6 +26,18 @@ export const logIn = async (email: string, pass: string) => {
 export const logOut = async () => {
     try {
         await firebaseSignOut(auth);
+        return { success: true };
+    } catch (err: any) {
+        return { success: false, error: err.message };
+    }
+};
+
+export const deleteAccount = async () => {
+    const user = auth.currentUser;
+    if (!user) return { success: false, error: "No user found" };
+
+    try {
+        await deleteUser(user);
         return { success: true };
     } catch (err: any) {
         return { success: false, error: err.message };

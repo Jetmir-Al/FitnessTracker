@@ -14,6 +14,21 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
+  const todayStr = new Date().toLocaleDateString();
+  const todayWorkouts = workouts.filter(w => new Date(w.date).toLocaleDateString() === todayStr);
+
+  const totalCalories = workouts.reduce((sum, w) => sum + (w.calories || 0), 0);
+  const totalMinutes = workouts.reduce((sum, w) => sum + (w.duration || 0), 0);
+  const dailyMinutes = todayWorkouts.reduce((sum, w) => sum + (w.duration || 0), 0);
+
+  const avgDuration = workouts.length > 0 ? Math.round(totalMinutes / workouts.length) : 0;
+
+  const weeklyGoal = 300;
+  const dailyGoal = 60;
+  const weeklyProgress = Math.min((totalMinutes / weeklyGoal) * 100, 100);
+  const dailyProgress = Math.min((dailyMinutes / dailyGoal) * 100, 100);
+
+
   const fetchData = async () => {
     const data = await getRecentWorkouts();
     setWorkouts(data);
@@ -36,15 +51,47 @@ export default function HomeScreen() {
   );
 
   return (
-    <SafeAreaView className="bg-surface-900 mt-15 flex-1 p-container">
-      <View className="bg-surface-800 p-6 rounded-card mb-6 border border-gray-800">
-        <Text className="text-primary font-heading text-xl uppercase tracking-widest">Daily Progress</Text>
-        <Text className="text-surface-100 font-mono text-4xl mt-2">{workouts.length} / 5</Text>
-        <Text className="text-surface-400 color-white font-body text-sm mb-4">Workouts this session</Text>
-        <View className="h-2 bg-gray-700 rounded-full">
-          <View className={`h-full bg-primary rounded-full w-[${Math.min((workouts.length / 5) * 100, 100)}%]`} />
+    <SafeAreaView className="bg-surface-900 mt-15 flex-1 p-container overflow-auto">
+      <View className="bg-primary p-6 rounded-card mb-4">
+        <Text className="text-secondary font-heading text-sm uppercase">Weekly Progress</Text>
+        <Text className="text-secondary font-heading text-4xl mt-1">{totalMinutes} <Text className="text-xl">mins</Text></Text>
+        <View className="h-1.5 bg-secondary/20 rounded-full mt-4 overflow-hidden">
+          <View
+            className="h-full bg-secondary rounded-full"
+            style={{ width: `${weeklyProgress}%` }}
+          />
         </View>
       </View>
+      <View className="flex-row space-x-3 mb-6 gap-3">
+        <View className="flex-1 bg-surface-800 p-4 rounded-card border border-gray-800 items-center">
+          <Ionicons name="flame" size={20} color="#CCFF00" />
+          <Text className="text-surface-50 font-heading text-lg mt-1">{totalCalories}</Text>
+          <Text className="color-white text-[10px] uppercase">Calories</Text>
+        </View>
+        <View className="flex-1 bg-surface-800 p-4 rounded-card border border-gray-800 items-center">
+          <Ionicons name="timer" size={20} color="#CCFF00" />
+          <Text className="text-surface-50 font-heading text-lg mt-1">{avgDuration}m</Text>
+          <Text className="color-white text-[10px] uppercase">Avg Session</Text>
+        </View>
+        <View className="flex-1 bg-surface-800 p-4 rounded-card border border-gray-800 items-center">
+          <Ionicons name="trophy" size={20} color="#CCFF00" />
+          <Text className="text-surface-50 font-heading text-lg mt-1">{workouts.length}</Text>
+          <Text className="color-white text-[10px] uppercase">Workouts</Text>
+        </View>
+      </View>
+
+
+      <View className="bg-surface-800 p-6 rounded-card mb-6 border border-gray-800">
+        <Text className="text-primary font-heading text-sm uppercase">Daily Goal</Text>
+        <Text className="text-surface-50 font-heading text-4xl mt-1">{dailyMinutes} <Text className="text-xl">/ {dailyGoal} mins</Text></Text>
+        <View className="h-1.5 bg-gray-700 rounded-full mt-4 overflow-hidden">
+          <View
+            className="h-full bg-primary rounded-full"
+            style={{ width: `${dailyProgress}%` }}
+          />
+        </View>
+      </View>
+
 
       <Text className="text-surface-50 font-heading text-2xl mb-4">Recent Activity</Text>
 
@@ -56,7 +103,7 @@ export default function HomeScreen() {
           keyExtractor={(item) => item.id}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#CCFF00" />}
           ListEmptyComponent={
-            <Text className="bg-surface-800 p-3 rounded-card text-surface-400 color-white will-change-variable text-center font-body mt-10">No workouts recorded yet. Get moving! 🏋️‍♂️</Text>
+            <Text className="bg-surface-800 p-3 rounded-card color-white text-center font-body mt-10">No workouts recorded yet. Get moving!</Text>
           }
           renderItem={({ item }) => (
             <TouchableOpacity

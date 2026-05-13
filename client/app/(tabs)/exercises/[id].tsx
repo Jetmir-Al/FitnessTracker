@@ -2,7 +2,6 @@ import { useLocalSearchParams } from "expo-router";
 import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getExerciseHistory, Workout } from "@/services/workoutService";
-import Ionicons from '@expo/vector-icons/Ionicons';
 
 const ExerciseDetails = () => {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -54,7 +53,7 @@ const ExerciseDetails = () => {
                                 <Text className="text-surface-50 font-body text-lg">
                                     {new Date(item.date).toLocaleDateString()}
                                 </Text>
-                                <Text className="text-surface-400 text-sm">{item.calories} calories burned</Text>
+                                <Text className="color-white text-sm">{item.calories} calories burned</Text>
                             </View>
                             <View className="bg-primary/10 px-3 py-1 rounded-pill">
                                 <Text className="text-primary font-heading">{item.duration}m</Text>

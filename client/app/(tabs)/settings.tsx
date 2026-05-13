@@ -14,12 +14,12 @@ const Settings = () => {
 
     const handleLogout = async () => {
         Alert.alert(
-            'Alert Title',
-            'My Alert Msg',
+            'Are you sure you want to logout?',
+            '',
             [
                 {
                     text: 'Cancel',
-                    onPress: () => Alert.alert('Cancel Pressed'),
+                    onPress: () => { },
                     style: 'cancel',
                 },
                 {
@@ -35,11 +35,7 @@ const Settings = () => {
                 }
             ],
             {
-                cancelable: true,
-                onDismiss: () =>
-                    Alert.alert(
-                        'This alert was dismissed by tapping outside of the alert dialog.',
-                    ),
+                cancelable: true
             },
         );
 
