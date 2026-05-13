@@ -34,8 +34,7 @@ export default function AddWorkout() {
             <Text className="text-surface-50 text-3xl font-heading mb-2">Log Workout</Text>
             <Text className="text-surface-400 font-body mb-8">Track your progress and sync to the cloud.</Text>
 
-            <View className="space-y-4">
-                {/* Workout Type */}
+            <View className="space-y-4 gap-5">
                 <View className="bg-surface-800 p-4 rounded-card flex-row items-center border border-gray-700">
                     <Ionicons name="barbell-outline" size={20} color={"#CCFF00"} />
                     <TextInput
@@ -47,7 +46,6 @@ export default function AddWorkout() {
                     />
                 </View>
 
-                {/* Duration */}
                 <View className="bg-surface-800 p-4 rounded-card flex-row items-center border border-gray-700">
                     <Ionicons name="time-outline" size={20} color={"#CCFF00"} />
                     <TextInput
@@ -60,7 +58,6 @@ export default function AddWorkout() {
                     />
                 </View>
 
-                {/* Calories */}
                 <View className="bg-surface-800 p-4 rounded-card flex-row items-center border border-gray-700">
                     <Ionicons name="flame-outline" size={20} color={"#CCFF00"} />
                     <TextInput
@@ -84,7 +81,6 @@ export default function AddWorkout() {
                     </Text>
                 </TouchableOpacity>
 
-                {/* Quick Clear */}
                 <TouchableOpacity onPress={() => { setType(''); setDuration(''); setCalories(''); }} className="mt-4 items-center">
                     <Text className="text-surface-500 font-body">Clear Fields</Text>
                 </TouchableOpacity>
