@@ -9,12 +9,21 @@ const SignIn = () => {
     const router = useRouter();
 
     const handleSignUp = async () => {
-        const { user, error } = await signUp(email, password);
-        if (user) {
-            Alert.alert("Welcome!", "Account created successfully.");
-            router.replace('/(tabs)'); // Go to main app
-        } else {
-            Alert.alert("Error", error);
+        try {
+
+            const { user, error } = await signUp(email, password);
+            if (error) {
+                console.log("Firebase Error Object:", JSON.stringify(error, null, 2));
+                Alert.alert("Error", error);
+            }
+            if (user) {
+                Alert.alert("Welcome!", "Account created successfully.");
+                router.replace('/(tabs)');
+            } else {
+                Alert.alert("Error", error);
+            }
+        } catch (error) {
+            console.error("Critical Error:", error);
         }
     };
 

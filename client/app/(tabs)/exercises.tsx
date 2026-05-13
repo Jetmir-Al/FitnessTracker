@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { saveWorkout } from '@/services/workoutService';
 
@@ -7,59 +7,88 @@ export default function AddWorkout() {
     const [type, setType] = useState('');
     const [duration, setDuration] = useState('');
     const [calories, setCalories] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
 
     const handleSave = async () => {
-        if (!type || !duration) return Alert.alert("Error", "Please fill in the workout type.");
+        if (!type || !duration) return Alert.alert("Error", "Please fill in at least the type and duration.");
 
+        setIsSaving(true);
         const result = await saveWorkout({
             type,
             duration: Number(duration),
-            calories: Number(calories),
+            calories: Number(calories) || 0,
             date: new Date().toISOString(),
         });
+        setIsSaving(false);
 
         if (result.success) {
-            Alert.alert("Success", result.synced ? "Workout synced to cloud! 🔥" : "Saved locally! (Offline)");
-            setType(''); setDuration(''); setCalories('');
+            Alert.alert("Success", result.synced ? "Synced to Cloud! " : "Saved Locally");
+            setType('');
+            setDuration('');
+            setCalories('');
         }
     };
 
     return (
-        <View className="flex-1 bg-surface-900 p-container pt-12 will-change-variable">
-            <Text className="text-surface-50 text-2xl font-heading mb-6">Log Workout</Text>
+        <ScrollView className="flex-1 bg-surface-900 px-container pt-12 mt-15">
+            <Text className="text-surface-50 text-3xl font-heading mb-2">Log Workout</Text>
+            <Text className="text-surface-400 font-body mb-8">Track your progress and sync to the cloud.</Text>
 
-            {/* Input Fields */}
             <View className="space-y-4">
-                <View className="bg-surface-800 p-workout rounded-card flex-row items-center border border-gray-700">
-                    <Ionicons name="barbell-sharp" size={20} color={"#ffffff"} />
+                {/* Workout Type */}
+                <View className="bg-surface-800 p-4 rounded-card flex-row items-center border border-gray-700">
+                    <Ionicons name="barbell-outline" size={20} color={"#CCFF00"} />
                     <TextInput
-                        className="flex-1 ml-3 text-surface-50 font-body"
-                        placeholder="Workout Type (e.g. Bench Press)"
-                        placeholderTextColor="#888"
+                        className="flex-1 ml-3 text-surface-50 font-body text-lg"
+                        placeholder="Workout Name (e.g. Deadlift)"
+                        placeholderTextColor="#555"
                         value={type}
                         onChangeText={setType}
                     />
                 </View>
 
-                <View className="bg-surface-800 p-workout rounded-card flex-row items-center border border-gray-700">
-                    <Ionicons name="timer-outline" size={20} color={"#fff"} />
+                {/* Duration */}
+                <View className="bg-surface-800 p-4 rounded-card flex-row items-center border border-gray-700">
+                    <Ionicons name="time-outline" size={20} color={"#CCFF00"} />
                     <TextInput
-                        className="flex-1 ml-3 text-surface-50 font-body"
-                        placeholder="Duration (mins)"
-                        placeholderTextColor="#888"
+                        className="flex-1 ml-3 text-surface-50 font-body text-lg"
+                        placeholder="Duration (minutes)"
+                        placeholderTextColor="#555"
                         keyboardType="numeric"
                         value={duration}
                         onChangeText={setDuration}
                     />
                 </View>
 
+                {/* Calories */}
+                <View className="bg-surface-800 p-4 rounded-card flex-row items-center border border-gray-700">
+                    <Ionicons name="flame-outline" size={20} color={"#CCFF00"} />
+                    <TextInput
+                        className="flex-1 ml-3 text-surface-50 font-body text-lg"
+                        placeholder="Calories Burned"
+                        placeholderTextColor="#555"
+                        keyboardType="numeric"
+                        value={calories}
+                        onChangeText={setCalories}
+                    />
+                </View>
+
+                {/* Save Button */}
                 <TouchableOpacity
                     onPress={handleSave}
-                    className="bg-primary p-4 rounded-button items-center mt-4"
+                    disabled={isSaving}
+                    className={`p-5 rounded-button items-center mt-6 ${isSaving ? 'bg-surface-700' : 'bg-primary'}`}
                 >
-                    <Text className="text-secondary font-heading text-lg">Save Workout</Text>
+                    <Text className="text-secondary font-heading text-xl">
+                        {isSaving ? "Saving..." : "Save Workout"}
+                    </Text>
+                </TouchableOpacity>
+
+                {/* Quick Clear */}
+                <TouchableOpacity onPress={() => { setType(''); setDuration(''); setCalories(''); }} className="mt-4 items-center">
+                    <Text className="text-surface-500 font-body">Clear Fields</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     );
 }
