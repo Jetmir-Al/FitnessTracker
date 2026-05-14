@@ -37,7 +37,7 @@ export default function AddWorkout() {
                         desc: "10 Workouts completed. You're building a serious habit!"
                     };
                 }
-                else if (Number(calories) >= 500) {
+                if (Number(calories) >= 500) {
                     currentAchievement = {
                         title: "CALORIE CRUSHER",
                         desc: "You just burned over 500 calories in a single session!"
