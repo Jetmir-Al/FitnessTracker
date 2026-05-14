@@ -19,12 +19,16 @@ const TabLayout = () => {
                     backgroundColor: '#CCFF00',
                     borderTopColor: '#262626',
                     borderRadius: 50,
-                    marginHorizontal: 10,
+                    marginHorizontal: 'auto',
+                    left: '5%',
+                    right: '5%',
+                    maxWidth: 600,
+                    alignSelf: 'center',
                     borderTopWidth: 0,
+                    height: 70,
                 },
                 tabBarItemStyle: {
-                    height: 100,
-                    paddingVertical: 20,
+                    paddingVertical: 10,
                 }
             }}
         >
@@ -49,7 +53,6 @@ const TabLayout = () => {
                 }}
             />
             <Tabs.Screen name="exercises/[id]" options={{ href: null }} />
-
             <Tabs.Screen
                 name="settings"
                 options={{

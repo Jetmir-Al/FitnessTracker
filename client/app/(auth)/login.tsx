@@ -32,8 +32,8 @@ const Login = () => {
     }
 
     return (
-        <SafeAreaView className="bg-surface-900 p-container flex-1">
-            <View className="flex-1 bg-surface-900 p-container justify-center">
+        <SafeAreaView className="bg-surface-900 p-container flex-1 items-center justify-center">
+            <View className="w-full max-w-[500px] self-center bg-surface-900 p-container justify-center">
                 <Text className="text-surface-50 text-3xl font-heading mb-8">Log-In</Text>
 
                 <View className="space-y-4 flex-column gap-3">
@@ -62,12 +62,8 @@ const Login = () => {
                     </TouchableOpacity>
                 </View>
                 <Link href={"/(auth)/sign-in"} className='mt-2 color-white gap-2 flex-row text-center justify-evenly w-[100%]'>
-                    <Text>
-                        Don`t have an account?
-                    </Text>
-                    <Text className='color-accent'>
-                        ~Register now!
-                    </Text>
+                    <Text>Don`t have an account?</Text>
+                    <Text className='color-accent'>~Register now!</Text>
                 </Link>
             </View>
         </SafeAreaView>

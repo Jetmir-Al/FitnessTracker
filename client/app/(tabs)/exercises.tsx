@@ -70,58 +70,60 @@ export default function AddWorkout() {
     };
 
     return (
-        <ScrollView className="flex-1 bg-surface-900 px-container pt-12 mt-15">
-            <Text className="text-surface-50 text-3xl font-heading mb-2">Log Workout</Text>
-            <Text className="text-surface-400 font-body mb-8">Track your progress and sync to the cloud.</Text>
+        <ScrollView className="flex-1 bg-surface-900">
+            <View className="max-w-[800px] w-full self-center px-container pt-12 pb-32 mt-10">
+                <Text className="text-surface-50 text-3xl font-heading mb-2">Log Workout</Text>
+                <Text className="color-white font-body mb-8">Track your progress and sync to the cloud.</Text>
 
-            <View className="space-y-4 gap-5">
-                <View className="bg-surface-800 p-4 rounded-card flex-row items-center border border-gray-700">
-                    <Ionicons name="barbell-outline" size={20} color={"#CCFF00"} />
-                    <TextInput
-                        className="flex-1 ml-3 text-surface-50 font-body text-lg"
-                        placeholder="Workout Name (e.g. Deadlift)"
-                        placeholderTextColor="#555"
-                        value={type}
-                        onChangeText={setType}
-                    />
+                <View className="space-y-4 gap-5">
+                    <View className="bg-surface-800 p-4 rounded-card flex-row items-center border border-gray-700">
+                        <Ionicons name="barbell-outline" size={20} color={"#CCFF00"} />
+                        <TextInput
+                            className="flex-1 ml-3 text-surface-50 font-body text-lg"
+                            placeholder="Workout Name (e.g. Deadlift)"
+                            placeholderTextColor="#555"
+                            value={type}
+                            onChangeText={setType}
+                        />
+                    </View>
+
+                    <View className="bg-surface-800 p-4 rounded-card flex-row items-center border border-gray-700">
+                        <Ionicons name="time-outline" size={20} color={"#CCFF00"} />
+                        <TextInput
+                            className="flex-1 ml-3 text-surface-50 font-body text-lg"
+                            placeholder="Duration (minutes)"
+                            placeholderTextColor="#555"
+                            keyboardType="numeric"
+                            value={duration}
+                            onChangeText={setDuration}
+                        />
+                    </View>
+
+                    <View className="bg-surface-800 p-4 rounded-card flex-row items-center border border-gray-700">
+                        <Ionicons name="flame-outline" size={20} color={"#CCFF00"} />
+                        <TextInput
+                            className="flex-1 ml-3 text-surface-50 font-body text-lg"
+                            placeholder="Calories Burned"
+                            placeholderTextColor="#555"
+                            keyboardType="numeric"
+                            value={calories}
+                            onChangeText={setCalories}
+                        />
+                    </View>
+
+                    <TouchableOpacity
+                        onPress={handleSave}
+                        className="p-5 rounded-button items-center mt-6 bg-primary"
+                    >
+                        <Text className="text-secondary font-heading text-xl">
+                            {isSaving ? "Saving..." : "Save Workout"}
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => { setType(''); setDuration(''); setCalories(''); }} className="mt-4 items-center">
+                        <Text className="color-white font-body">Clear Fields</Text>
+                    </TouchableOpacity>
                 </View>
-
-                <View className="bg-surface-800 p-4 rounded-card flex-row items-center border border-gray-700">
-                    <Ionicons name="time-outline" size={20} color={"#CCFF00"} />
-                    <TextInput
-                        className="flex-1 ml-3 text-surface-50 font-body text-lg"
-                        placeholder="Duration (minutes)"
-                        placeholderTextColor="#555"
-                        keyboardType="numeric"
-                        value={duration}
-                        onChangeText={setDuration}
-                    />
-                </View>
-
-                <View className="bg-surface-800 p-4 rounded-card flex-row items-center border border-gray-700">
-                    <Ionicons name="flame-outline" size={20} color={"#CCFF00"} />
-                    <TextInput
-                        className="flex-1 ml-3 text-surface-50 font-body text-lg"
-                        placeholder="Calories Burned"
-                        placeholderTextColor="#555"
-                        keyboardType="numeric"
-                        value={calories}
-                        onChangeText={setCalories}
-                    />
-                </View>
-
-                <TouchableOpacity
-                    onPress={handleSave}
-                    className={`p-5 rounded-button items-center mt-6 bg-primary`}
-                >
-                    <Text className="text-secondary font-heading text-xl">
-                        {isSaving ? "Saving..." : "Save Workout"}
-                    </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => { setType(''); setDuration(''); setCalories(''); }} className="mt-4 items-center">
-                    <Text className="text-surface-500 font-body">Clear Fields</Text>
-                </TouchableOpacity>
             </View>
             <AchievementModal
                 visible={showModal}

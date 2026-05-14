@@ -28,42 +28,40 @@ const SignIn = () => {
     };
 
     return (
-        <View className="flex-1 bg-surface-900 p-container justify-center">
-            <Text className="text-surface-50 text-3xl font-heading mb-8">Register now</Text>
+        <View className="flex-1 bg-surface-900 p-container justify-center items-center">
+            <View className="w-full max-w-[500px] self-center">
+                <Text className="text-surface-50 text-3xl font-heading mb-8">Register now</Text>
 
-            <View className="space-y-4 flex-column gap-3">
-                <TextInput
-                    placeholder="Email"
-                    placeholderTextColor="#888"
-                    className="bg-surface-800 p-4 rounded-card text-surface-50 border border-gray-700"
-                    value={email}
-                    onChangeText={setEmail}
-                    autoCapitalize="none"
-                />
-                <TextInput
-                    placeholder="Password"
-                    placeholderTextColor="#888"
-                    className="bg-surface-800 p-4 rounded-card text-surface-50 border border-gray-700"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                />
+                <View className="space-y-4 flex-column gap-3">
+                    <TextInput
+                        placeholder="Email"
+                        placeholderTextColor="#888"
+                        className="bg-surface-800 p-4 rounded-card text-surface-50 border border-gray-700"
+                        value={email}
+                        onChangeText={setEmail}
+                        autoCapitalize="none"
+                    />
+                    <TextInput
+                        placeholder="Password"
+                        placeholderTextColor="#888"
+                        className="bg-surface-800 p-4 rounded-card text-surface-50 border border-gray-700"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                    />
 
-                <TouchableOpacity
-                    onPress={handleSignUp}
-                    className="bg-primary p-4 rounded-button items-center mt-6"
-                >
-                    <Text className="text-secondary font-heading text-lg">Submit</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={handleSignUp}
+                        className="bg-primary p-4 rounded-button items-center mt-6"
+                    >
+                        <Text className="text-secondary font-heading text-lg">Submit</Text>
+                    </TouchableOpacity>
+                </View>
+                <Link href={"/(auth)/login"} className='mt-2 color-white gap-2 flex-row text-center justify-evenly w-[100%]'>
+                    <Text>Already have an account?</Text>
+                    <Text className='color-accent'>~Log-in now!</Text>
+                </Link>
             </View>
-            <Link href={"/(auth)/login"} className='mt-2 color-white gap-2 flex-row text-center justify-evenly w-[100%]'>
-                <Text>
-                    Already have an account?
-                </Text>
-                <Text className='color-accent'>
-                    ~Log-in now!
-                </Text>
-            </Link>
         </View>
     );
 }
